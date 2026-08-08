@@ -1,0 +1,143 @@
+
+package airlinemanagementsystem;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.*;
+
+public class Login extends JFrame implements ActionListener {
+    JButton submit, reset, close;
+    JTextField tfusername;
+    JPasswordField tfpassword;
+
+    public Login() {
+        // Gradient background panel
+        JPanel panel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                GradientPaint gp = new GradientPaint(0, 0, new Color(0x2193b0),
+                                                     0, getHeight(), new Color(0x6dd5ed));
+                g2d.setPaint(gp);
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        panel.setLayout(null);
+        setContentPane(panel);
+
+        // Title label (smaller font)
+        JLabel title = new JLabel("<html><div style='color: white; font-family: Arial; font-size: 20px; font-weight: bold;'>✈ Airline Management System</div></html>");
+        title.setBounds(40, 25, 420, 40);
+        title.setHorizontalAlignment(SwingConstants.CENTER);
+        panel.add(title);
+
+        // Username label
+        JLabel lblusername = new JLabel("<html><span style='color: white; font-family: Arial; font-weight: bold; font-size: 13px;'>Username</span></html>");
+        lblusername.setBounds(70, 100, 120, 25);
+        panel.add(lblusername);
+
+        tfusername = new JTextField();
+        tfusername.setBounds(200, 100, 200, 25);
+        tfusername.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        tfusername.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1, true));
+        panel.add(tfusername);
+
+        // Password label
+        JLabel lblpassword = new JLabel("<html><span style='color: white; font-family: Arial; font-weight: bold; font-size: 13px;'>Password</span></html>");
+        lblpassword.setBounds(70, 140, 120, 25);
+        panel.add(lblpassword);
+
+        tfpassword = new JPasswordField();
+        tfpassword.setBounds(200, 140, 200, 25);
+        tfpassword.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        tfpassword.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1, true));
+        panel.add(tfpassword);
+
+        // Buttons (no icons)
+        submit = styledButton("<html><span style='color: white; font-weight: bold; font-size: 12px;'>Submit</span></html>", new Color(76, 175, 80));
+        submit.setBounds(60, 200, 100, 32);
+        submit.addActionListener(this);
+        panel.add(submit);
+
+        reset = styledButton("<html><span style='color: white; font-weight: bold; font-size: 12px;'>Reset</span></html>", new Color(33, 150, 243));
+        reset.setBounds(180, 200, 100, 32);
+        reset.addActionListener(this);
+        panel.add(reset);
+
+        close = styledButton("<html><span style='color: white; font-weight: bold; font-size: 12px;'>Close</span></html>", new Color(244, 67, 54));
+        close.setBounds(300, 200, 100, 32);
+        close.addActionListener(this);
+        panel.add(close);
+
+        // Footer (smaller & lighter)
+        JLabel footer = new JLabel("<html><i style='color: rgba(255,255,255,0.8); font-size: 11px; font-family: Arial;'>Welcome to Secure Airline Login</i></html>");
+        footer.setBounds(60, 245, 340, 25);
+        footer.setHorizontalAlignment(SwingConstants.CENTER);
+        panel.add(footer);
+
+        // Frame settings
+        setSize(500, 320);
+        setLocationRelativeTo(null); // center the window
+        setTitle("Login - Airline Management System");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    private JButton styledButton(String text, Color baseColor) {
+        JButton button = new JButton(text);
+        button.setFocusPainted(false);
+        button.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        button.setBackground(baseColor);
+        button.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1, true));
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        // Hover effect
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(baseColor.darker());
+                button.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2, true));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(baseColor);
+                button.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1, true));
+            }
+        });
+        return button;
+    }
+
+    public void actionPerformed(ActionEvent ae) {
+        if (ae.getSource() == submit) {
+            String username = tfusername.getText();
+            String password = new String(tfpassword.getPassword());
+
+            try {
+                Conn c = new Conn();
+                String query = "select * from login where username = '" + username + "' and password = '" + password + "'";
+                ResultSet rs = c.s.executeQuery(query);
+
+                if (rs.next()) {
+                    new Home();
+                    setVisible(false);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Invalid Username or Password");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (ae.getSource() == reset) {
+            tfusername.setText("");
+            tfpassword.setText("");
+        } else if (ae.getSource() == close) {
+            setVisible(false);
+        }
+    }
+
+    public static void main(String[] args) {
+        new Login();
+}
+}
