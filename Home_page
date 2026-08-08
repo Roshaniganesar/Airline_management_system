@@ -1,0 +1,97 @@
+package airlinemanagementsystem;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class Home extends JFrame implements ActionListener {
+
+    public Home() {
+        setLayout(null);
+
+        // Background image
+        ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("airlinemanagementsystem/ic/ai2.jpg"));
+        JLabel image = new JLabel(i1);
+        image.setBounds(0, 0, 1600, 800);
+        add(image);
+
+        // Styled heading using HTML
+        JLabel heading = new JLabel("<html><div style='color:#0033cc; font-size:38px; font-family:Verdana; font-weight:bold; text-shadow:2px 2px #aaaaaa;'>AIR INDIA WELCOMES YOU</div></html>");
+        heading.setBounds(450, 40, 1000, 50);
+        image.add(heading);
+
+        // Menu bar with background color
+        JMenuBar menubar = new JMenuBar();
+        menubar.setBackground(new Color(240, 240, 255));
+        setJMenuBar(menubar);
+
+        // "Details" menu with styled text
+        JMenu details = new JMenu("<html><b><font color='#1a1aff'>Details</font></b></html>");
+        details.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        menubar.add(details);
+
+        // Menu items (with no-wrap style)
+        JMenuItem flightDetails = new JMenuItem("<html><div style='white-space:nowrap;'><font color='#3333cc'>✈&nbsp;Flight Details</font></div></html>");
+        flightDetails.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        flightDetails.addActionListener(this);
+        details.add(flightDetails);
+
+        JMenuItem customerDetails = new JMenuItem("<html><div style='white-space:nowrap;'><font color='#3333cc'>👤&nbsp;Add Customer Details</font></div></html>");
+        customerDetails.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        customerDetails.addActionListener(this);
+        details.add(customerDetails);
+
+        JMenuItem bookFlight = new JMenuItem("<html><div style='white-space:nowrap;'><font color='#3333cc'>🧾&nbsp;Book Flight</font></div></html>");
+        bookFlight.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        bookFlight.addActionListener(this);
+        details.add(bookFlight);
+
+        JMenuItem journeyDetails = new JMenuItem("<html><div style='white-space:nowrap;'><font color='#3333cc'>🛫&nbsp;Journey Details</font></div></html>");
+        journeyDetails.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        journeyDetails.addActionListener(this);
+        details.add(journeyDetails);
+
+        JMenuItem ticketCancellation = new JMenuItem("<html><div style='white-space:nowrap;'><font color='#3333cc'>❌&nbsp;Cancel Ticket</font></div></html>");
+        ticketCancellation.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        ticketCancellation.addActionListener(this);
+        details.add(ticketCancellation);
+
+        // Ticket menu
+        JMenu ticket = new JMenu("<html><b><font color='#1a1aff'>Ticket</font></b></html>");
+        ticket.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        menubar.add(ticket);
+
+        JMenuItem boardingPass = new JMenuItem("<html><div style='white-space:nowrap;'><font color='#3333cc'>🎟&nbsp;Boarding Pass</font></div></html>");
+        boardingPass.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        boardingPass.addActionListener(this);
+        ticket.add(boardingPass);
+
+        // JFrame settings
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        getContentPane().setBackground(new Color(230, 240, 255));
+        setTitle("Air India Management System");
+        setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent ae) {
+        String text = ae.getActionCommand().replaceAll("<[^>]*>", ""); // remove HTML tags for comparison
+
+        if (text.contains("Add Customer Details")) {
+            new AddCustomer();
+        } else if (text.contains("Flight Details")) {
+            new FlightInfo();
+        } else if (text.contains("Book Flight")) {
+            new BookFlight();
+        } else if (text.contains("Journey Details")) {
+            new JourneyDetails();  
+        } else if (text.contains("Cancel Ticket")) {
+            new Cancel();
+        } else if (text.contains("Boarding Pass")) {
+            new BoardingPass();
+        }
+    }
+
+    public static void main(String[] args) {
+        new Home();
+    }
+}
