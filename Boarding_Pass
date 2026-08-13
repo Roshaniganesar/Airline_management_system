@@ -1,0 +1,141 @@
+package airlinemanagementsystem;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.*;
+
+public class BoardingPass extends JFrame implements ActionListener {
+
+    JTextField tfpnr;
+    JLabel tfname, tfnationality, lblsrc, lbldest, labelfname, labelfcode, labeldate, labelftime;
+    JButton fetchButton;
+
+    public BoardingPass() {
+        getContentPane().setBackground(Color.WHITE);
+        setLayout(null);
+
+        // Header panel
+        JPanel headerPanel = new JPanel();
+        headerPanel.setBounds(0, 0, 1000, 90);
+        headerPanel.setBackground(new Color(0, 102, 204));
+        headerPanel.setLayout(null);
+        add(headerPanel);
+
+        JLabel heading = new JLabel("<html><b><span style='color:white;'>AIR INDIA</span></b></html>");
+        heading.setBounds(380, 10, 450, 35);
+        heading.setFont(new Font("Tahoma", Font.PLAIN, 32));
+        headerPanel.add(heading);
+
+        JLabel subheading = new JLabel("<html><span style='color:yellow;'>Boarding Pass</span></html>");
+        subheading.setBounds(360, 50, 300, 30);
+        subheading.setFont(new Font("Tahoma", Font.PLAIN, 24));
+        headerPanel.add(subheading);
+
+        // Form panel
+        JPanel formPanel = new JPanel();
+        formPanel.setBounds(20, 100, 950, 300);
+        formPanel.setBackground(new Color(224, 224, 224));
+        formPanel.setLayout(null);
+        add(formPanel);
+
+        JLabel lblaadhar = new JLabel("PNR DETAILS");
+        lblaadhar.setBounds(20, 20, 150, 25);
+        lblaadhar.setFont(new Font("Tahoma", Font.BOLD, 16));
+        formPanel.add(lblaadhar);
+
+        tfpnr = new JTextField();
+        tfpnr.setBounds(180, 20, 150, 25);
+        formPanel.add(tfpnr);
+
+        fetchButton = new JButton("Enter");
+        fetchButton.setBackground(Color.BLACK);
+        fetchButton.setForeground(Color.WHITE);
+        fetchButton.setBounds(350, 20, 120, 25);
+        fetchButton.addActionListener(this);
+        formPanel.add(fetchButton);
+
+        // Initialize labels
+        tfname = new JLabel();
+        tfnationality = new JLabel();
+        lblsrc = new JLabel();
+        lbldest = new JLabel();
+        labelfname = new JLabel();
+        labelfcode = new JLabel();
+        labeldate = new JLabel();
+        labelftime = new JLabel();
+
+        // Add labels to panel
+        addLabel(formPanel, "NAME", tfname, 20, 60);
+        addLabel(formPanel, "NATIONALITY", tfnationality, 20, 100);
+        addLabel(formPanel, "SRC", lblsrc, 20, 140);
+        addLabel(formPanel, "DEST", lbldest, 380, 140);
+        addLabel(formPanel, "Flight Name", labelfname, 20, 180);
+        addLabel(formPanel, "Flight Code", labelfcode, 380, 180);
+        addLabel(formPanel, "Flight Time", labelftime, 20, 220);
+        addLabel(formPanel, "Date", labeldate, 380, 220);
+
+        // Airline image
+        ImageIcon i1 = new ImageIcon(ClassLoader.getSystemResource("airlinemanagementsystem/ic/bps.png"));
+        Image i2 = i1.getImage().getScaledInstance(300, 230, Image.SCALE_SMOOTH);
+        ImageIcon image = new ImageIcon(i2);
+        JLabel lblimage = new JLabel(image);
+        lblimage.setBounds(600, 20, 300, 230);
+        formPanel.add(lblimage);
+
+        setSize(1000, 450);
+        setLocation(300, 150);
+        setVisible(true);
+    }
+
+    // Helper method to add a label and value
+    private void addLabel(JPanel panel, String labelText, JLabel valueLabel, int x, int y) {
+        JLabel lbl = new JLabel("<html><b>" + labelText + ":</b></html>");
+        lbl.setBounds(x, y, 150, 25);
+        lbl.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        panel.add(lbl);
+
+        valueLabel.setBounds(x + 160, y, 150, 25);
+        valueLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        valueLabel.setForeground(new Color(0, 102, 204));
+        panel.add(valueLabel);
+    }
+
+    public void actionPerformed(ActionEvent ae) {
+        String pnr = tfpnr.getText();
+
+        try {
+            Conn conn = new Conn();
+            // Fetch reservation details
+            String query = "SELECT * FROM reservation WHERE PNR = '" + pnr + "'";
+            ResultSet rs = conn.s.executeQuery(query);
+
+            if (rs.next()) {
+                tfname.setText("<html><b>" + rs.getString("name") + "</b></html>");
+                tfnationality.setText(rs.getString("nationality"));
+                lblsrc.setText(rs.getString("src"));
+                lbldest.setText(rs.getString("des"));
+                labelfname.setText(rs.getString("flightname"));
+                labelfcode.setText(rs.getString("flightcode"));
+                labeldate.setText(rs.getString("ddate"));
+
+                // Fetch flight time directly from flight table
+                String fcode = rs.getString("flightcode");
+                ResultSet rsTime = conn.s.executeQuery("SELECT ftime FROM flight WHERE f_code = '" + fcode + "'");
+                if (rsTime.next()) {
+                    labelftime.setText(rsTime.getString("ftime"));
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Please enter correct PNR");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        new BoardingPass();
+    }
+}
