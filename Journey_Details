@@ -1,0 +1,79 @@
+package airlinemanagementsystem;
+
+import javax.swing.*;
+import java.awt.*;
+import java.sql.*;
+import java.awt.event.*;
+import net.proteanit.sql.DbUtils;
+
+public class JourneyDetails extends JFrame implements ActionListener {
+    JTable table;
+    JTextField pnr;
+    JButton show;
+
+    public JourneyDetails() {
+        getContentPane().setBackground(new Color(245, 245, 245)); // light background
+        setLayout(null);
+
+        // Heading
+        JLabel heading = new JLabel("<html><b><span style='color:blue;'>Journey Details</span></b></html>");
+        heading.setFont(new Font("Tahoma", Font.BOLD, 24));
+        heading.setBounds(300, 10, 250, 35);
+        add(heading);
+
+        // PNR Label
+        JLabel lblpnr = new JLabel("<html><b>PNR Number:</b></html>");
+        lblpnr.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        lblpnr.setBounds(50, 60, 120, 25);
+        add(lblpnr);
+
+        // PNR Input
+        pnr = new JTextField();
+        pnr.setBounds(180, 60, 150, 25);
+        pnr.setBorder(BorderFactory.createLineBorder(new Color(0, 123, 255), 2)); // modern border
+        add(pnr);
+
+        // Show Details Button
+        show = new JButton("<html><span style='color:white;'>Show Details</span></html>");
+        show.setBackground(new Color(0, 123, 255)); // modern blue button
+        show.setBounds(350, 60, 130, 25);
+        show.setFocusPainted(false);
+        show.addActionListener(this);
+        add(show);
+
+        // Table with scroll pane
+        table = new JTable();
+        table.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        table.setRowHeight(25);
+        table.setBackground(Color.WHITE);
+        table.setGridColor(new Color(200, 200, 200));
+
+        JScrollPane jsp = new JScrollPane(table);
+        jsp.setBounds(20, 120, 750, 350);
+        jsp.setBorder(BorderFactory.createLineBorder(new Color(0, 123, 255), 2));
+        add(jsp);
+
+        setSize(800, 600);
+        setLocation(400, 150);
+        setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent ae) {
+        try {
+            Conn conn = new Conn();
+            ResultSet rs = conn.s.executeQuery("select * from reservation where PNR = '" + pnr.getText() + "'");
+
+            if (!rs.isBeforeFirst()) {
+                JOptionPane.showMessageDialog(null, "No Information Found");
+                return;
+            }
+            table.setModel(DbUtils.resultSetToTableModel(rs));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        new JourneyDetails();
+    }
+}
