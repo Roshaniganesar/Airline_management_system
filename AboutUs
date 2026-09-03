@@ -1,0 +1,117 @@
+package airlinemanagementsystem;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class AboutUs extends JFrame {
+
+    public AboutUs() {
+        setTitle("Airlines Reservation System");
+        setSize(900, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null); // Center on screen
+
+        // Updated HTML with table layout instead of Flexbox
+        String htmlContent = """
+            <html>
+            <head>
+                <style>
+                    body {
+                        background-color: #0074cc;
+                        font-family: Arial, sans-serif;
+                        color: #000000;
+                        margin: 0;
+                        padding: 0;
+                    }
+                    h1 {
+                        text-align: center;
+                        color: white;
+                        padding: 15px;
+                        background-color: #003366;
+                        margin: 0;
+                        font-family:Viner Hand ITC;
+                    }
+                    nav {
+                        background-color: #003366;
+                        padding: 10px;
+                        text-align: center;
+                    }
+                    nav a {
+                        color: white;
+                        margin: 0 15px;
+                        text-decoration: none;
+                        font-weight: bold;
+                    }
+                    .container {
+                        width: 90%;
+                        margin: 20px auto;
+                        background-color: #ffffff;
+                        padding: 20px;
+                    }
+                    .footer {
+                        text-align: center;
+                        color: white;
+                        padding: 10px;
+                        background-color: #003366;
+                    }
+                    img {
+                        width: 100%;
+                        max-width: 300px;
+                    }
+                    td {
+                        vertical-align: top;
+                        padding: 10px;
+                    }
+                </style>
+            </head>
+            <body>
+                <h1>AIRLINES RESERVATION SYSTEM</h1>
+                <nav>
+                    <a href="#">HOME</a>
+                    <a href="#">ABOUT US</a>
+                    <a href="#">BOOK TICKET</a>
+                    <a href="#">REGISTER</a>
+                    <a href="#">LOGIN</a>
+                    <a href="#">CONTACT US</a>
+                </nav>
+                <div class="container">
+                    <table width="100%">
+                        <tr>
+                            <td width="65%">
+                                <h2>ABOUT AIRLINES RESERVATION SYSTEM</h2>
+                                <p>An airline reservation system (ARS) is part of the so-called passenger service systems (PSS), which are applications supporting the direct contact with the passenger.</p>
+                                <p>ARS eventually evolved into the computer reservations system (CRS). A computer reservation system is used for the reservations of a particular airline and interfaces with a global distribution system (GDS) which supports travel agencies and other distribution channels in making reservations for most major airlines in a single system.</p>
+                                <p>Airline reservation systems contain airline schedules, fare tariffs, passenger reservations and ticket records. An airline's direct distribution works within their own reservation system, as well as pushing out information to the GDS.</p>
+                                <p>One of the core functions of the CRS is inventory control. Inventory control enables an airline to sell their product (seats) in all of their markets.</p>
+                                <p>Modern systems allow passengers to check in online, view their booking, and perform other tasks in response to changes in demand or pricing strategies of a carrier.</p>
+                            </td>
+                            <td width="35%">
+                                <h3>ADVERTISEMENT</h3>
+                                <img src="https://media.istockphoto.com/id/1307890143/photo/plane-and-flight-information-screens-double-exposure-concepts.jpg?s=612x612&w=0&k=20&c=_ilvOCRwAKRY2ZylG26h6XGVRoVY8mBwF5NJ2HH5xGc=" alt="More Legroom Ad"/>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="footer">
+                    &copy; Airlines Reservation System
+                </div>
+            </body>
+            </html>
+        """;
+
+        // Use JEditorPane to display HTML content
+        JEditorPane editorPane = new JEditorPane("text/html", htmlContent);
+        editorPane.setEditable(false);
+        editorPane.setOpaque(false);
+
+        JScrollPane scrollPane = new JScrollPane(editorPane);
+        setContentPane(scrollPane);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new AboutUs().setVisible(true);
+        });
+    }
+}
